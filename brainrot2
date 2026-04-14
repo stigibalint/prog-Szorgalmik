@@ -1,0 +1,123 @@
+===================================================
+C++ OOP BRAINROT WORKSHEET Vol. 2 - MEGOLDÁSOK
+===================================================
+
+01. Melyik karakter vagyok? — Kódrészlet → Fogalom párosítás
+---------------------------------------------------
+class Kutya { ... };                       -> Osztály Olga (Osztály / Tervrajz)
+Kutya k("Rex");                            -> Objektum Oszkár (Objektum / Példányosítás)
+Kutya(string n) { nev=n; }                 -> Konstruktor Kristóf (Konstruktor)
+~Kutya() { delete adat; }                  -> Destruktor Dezső (Destruktor)
+class Kutya : public Allat                 -> Öröklődő Olivér (Öröklődés)
+virtual void hangotAd() = 0;               -> Absztrakt Anikó (Tisztán virtuális függvény)
+void f() override { ... }                  -> Polimorf Péter (Polimorfizmus)
+private: int egyenleg;                     -> Bezáró Bence (Egységbezárás / Encapsulation)
+Allat* a = new Kutya(); a->hangotAd();     -> Late Binding Lajos (Dinamikus kötés / Kései kötés)
+
+
+02. Töltsd ki a hiányzó részeket!
+---------------------------------------------------
+a) Konstruktor Kristóf és Destruktor Dezső:
+class Auto {
+public:
+    std::string marka;
+    int* ev;
+
+    // konstruktor:
+    Auto(std::string m) {
+        marka = m;
+        ev = new int(2024);
+    }
+
+    // destruktor:
+    ~Auto() {
+        delete ev;
+    }
+};
+
+b) Bezáró Bence:
+class BankSzamla {
+private:
+    int egyenleg = 0;       // Belülről látszik, kívülről nem
+protected:
+    int hitelkeret = 50000; // Leszármazott is látja, kívülső nem
+public:
+    void befizet(int x);    // Mindenki hívhatja
+};
+
+c) Polimorf Péter kimenete:
+// Kimenetek sorban: "Vau!" , "Miau!" , "Vau!"
+
+
+03. Absztrakt Anikó vs Interfész István
+---------------------------------------------------
+X = Interfész István 
+mert: Kizárólag "pure virtual" (tisztán virtuális) metódusai vannak (= 0). Nincsenek adattagjai (változói) és egyetlen függvénynek sincs konkrét megvalósítása. Ez egy tisztán absztrakt osztály, ami szerződésként funkcionál.
+
+Y = Absztrakt Anikó 
+mert: Tartalmaz pure virtual metódust (mozog()), ami miatt nem lehet belőle objektumot létrehozni (absztrakt), DE van saját állapota (int energia) és konkrétan megvalósított függvénye is (legzik()).
+
+
+04. Early Eddie vs Late Binding Lajos
+---------------------------------------------------
+Kutya k; k.ugat(); (ugat nem virtual)            -> EARLY (fordítási idő)
+Allat* a = new Kutya(); a->hangotAd(); (virtual) -> LATE (futási idő)
+osszeAdd<int>(3,4); (template)                   -> EARLY (fordítási idő)
+Függvény overloading (f(int) vs f(double))       -> EARLY (fordítási idő)
+virtual void f() = 0; leszármazotton hívva       -> LATE (futási idő)
+
+
+05. Tervezz egy mini osztályhierarchiát!
+---------------------------------------------------
+#include <iostream>
+#include <string>
+
+// 1. Szint: ABSZTRAKT OSZTÁLY
+class Jarmu {
+protected: // Csak a leszármazottak látják
+    int vegsebesseg;
+public:
+    Jarmu(int v) : vegsebesseg(v) {}
+    virtual ~Jarmu() = default;      
+    
+    // Pure virtual (tisztán virtuális) függvény -> Absztrakttá teszi az osztályt
+    virtual void indit() = 0; 
+};
+
+// 2. Szint: KONKRÉT OSZTÁLY (Öröklődés)
+class Auto : public Jarmu {
+private: // Csak az Auto osztály látja
+    int kerekekSzama; 
+public:
+    Auto(int v) : Jarmu(v), kerekekSzama(4) {}
+
+    // Szülő pure virtual metódusának megvalósítása
+    void indit() override {
+        std::cout << "Az auto motorja beindult." << std::endl;
+    }
+    
+    // Új, felülírható (virtuális) viselkedés
+    virtual void driftel() {
+        std::cout << "Az auto probal driftelni..." << std::endl;
+    }
+};
+
+// 3. Szint: KONKRÉT OSZTÁLY (Többszörös öröklési lánc vége)
+class BMW_M4 : public Auto {
+private:
+    std::string motorTipus;
+public:
+    BMW_M4() : Auto(290), motorTipus("S58 Twin-Turbo") {}
+
+    // Polimorfizmus: felülírjuk a szülő driftel() metódusát
+    void driftel() override {
+        std::cout << "A BMW M4 (" << motorTipus << ") tokeletesen keresztbe all a kanyarban!" << std::endl;
+    }
+};
+
+/*
+Példa futásidőben (Late Binding Lajos):
+Auto* kocsi = new BMW_M4();
+kocsi->driftel(); // A BMW driftel() metódusa fut le!
+delete kocsi;
+*/
