@@ -1,0 +1,86 @@
+import os
+
+content = """================================================================================
+FUNKCIONÁLIS PARADIGMA BRAINROT WORKSHEET (Vol. 3) - MEGOLDÁSOK
+================================================================================
+
+01. FOGALOMFELISMERÉS
+--------------------------------------------------------------------------------
+1.  \\x -> x * 2                                   -> Lambda / névtelen függvény (Lambda Lali)
+2.  f . g (pont operátor)                         -> Függvényösszetétel (Függvényösszetétel Fanni)
+3.  add 5 (csak egy param, visszaad fnv-t)        -> Currying / Részleges alkalmazás (Curry Csaba)
+4.  map f xs, filter p xs                         -> Magasabb rendű függvények (Higher-Order Hugó)
+5.  foldl (+) 0 [1,2,3]                           -> Fold / Reduce (Fold Frida)
+6.  f [] = 0; f (x:xs) = ...                      -> Mintaillesztés és Rekurzió (Mintaillesztő Miska / Rekurzív Rita)
+7.  take 10 [1..] (végtelen lista)                -> Lusta kiértékelés (Lusta László)
+8.  Ugyanarra a bemenetre mindig ugyanaz az eredm. -> Tiszta függvény (Tiszta Tivadar)
+9.  A kifejezés értéke nem függ helyétől a kódban  -> Hivatkozási átláthatóság (Hivatkozási Hanna)
+10. Az érték, amiből már nem lehet tovább reduk.  -> Normál forma (Normál Forma Norbert)
+
+02. REDUKCIÓS LÉPÉSEK
+--------------------------------------------------------------------------------
+a) β-redukció lépésről lépésre:
+   (\\x -> x + x) 5
+   -- 1. lépés (β): 5 + 5          (behelyettesítés)
+   -- 2. lépés:     10             (kiértékelés)
+   -- Normál forma: 10
+
+b) Normál formák:
+   (a) 2 + 3 * 4       -> Normál forma: 14
+   (b) map (*2) [1,2]  -> Normál forma: [2, 4]
+   (c) let x = x in x  -> Normál forma: NINCS
+       (Indok: Körkörös definíció, a kifejezés végtelenül redukálódik, sosem éri el a normál formát.)
+
+03. TAIL-REKURZIÓ VS SIMA REKURZIÓ
+--------------------------------------------------------------------------------
+A: szorzat [] = 1; szorzat (x:xs) = x * szorzat xs
+   Állapot: NEM-TAIL (A szorzás művelete megvárja a rekurzív hívás eredményét.)
+
+B: szorzatT [] acc = acc; szorzatT (x:xs) acc = szorzatT xs (x * acc)
+   Állapot: TAIL (A rekurzív hívás az utolsó művelet.)
+
+C: Tail-recursive osszeg akkumulátorral:
+   osszegT [] acc     = acc
+   osszegT (x:xs) acc = osszegT xs (acc + x)
+
+04. CURRY ÉS FÜGGVÉNYÖSSZETÉTEL
+--------------------------------------------------------------------------------
+a) Curry:
+   add3 = add 3             -- típusa: Int -> Int (vagy Num a => a -> a)
+   add3 7                   -- eredmény: 10
+   map (add 10) [1,2,3]     -- eredmény: [11, 12, 13]
+
+b) Függvényösszetétel:
+   duplaPlusz1 = (+1) . (*2)
+   duplaPlusz1 4            -- lépések: 4 * 2 = 8; 8 + 1 = 9 -> eredmény: 9
+
+   Kombinált függvény (3-mal szoroz, 1-et kivon, négyzetre emel):
+   kombinalt = (^2) . (subtract 1) . (*3)
+   kombinalt 5              -- eredmény: 196 (Mert: 5*3=15, 15-1=14, 14^2=196)
+
+05. LUSTA LÁSZLÓ VS MOHÓ MÓNIKA
+--------------------------------------------------------------------------------
+1. take 5 [1..]                                  -> LUSTA kezeli (Mohó lefagyna)
+2. sum [1..100]                                  -> MINDKETTŐ kezeli
+3. Fibonacci sorozat végtelen listája             -> LUSTA kezeli (Mohó lefagyna)
+4. Ha egy függvény argumentumát nem használjuk fel -> LUSTA nem számolja ki (Mohó feleslegesen kiszámolná)
+
+06. SAJÁT BRAINROT KARAKTER
+--------------------------------------------------------------------------------
+Név: Típusosztály Teca
+Fogalom: Typeclass (Típusosztály / Interfész)
+Személyiség: Teca a klub bejáratánál álló szigorú kidobó. Csak azokat a típusokat
+engedi be a "függvény-klubba", akik rendelkeznek a megfelelő igazolvánnyal (instance).
+Ha egy típus nem tudja bemutatni például az "Eq" vagy "Show" igazolványt, Teca
+kíméletlenül fordítási hibát dob.
+Idézet: "Nincs instance, nincs buli! Menj haza és írd meg az implementációt!"
+Kódpélda: 
+    f :: Show a => a -> String
+    f x = "Nézd, Teca engedte: " ++ show x
+================================================================================"""
+
+file_path = "/mnt/data/megoldasok_funkcionalis_paradigma.txt"
+with open(file_path, "w", encoding="utf-8") as f:
+    f.write(content)
+
+print(f"File saved to {file_path}")
